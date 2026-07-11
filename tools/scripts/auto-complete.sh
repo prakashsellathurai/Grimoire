@@ -13,7 +13,7 @@ _trigger_compgen_filenames() {
     # Directories:
     compgen -d -S / -- $FOO_DIR"$cur" | sed -e 's|'$FOO_DIR'||'
 }
-trigger() {
+run() {
     echo "Running: $@"
     # or actually exec the script, e.g.:
     bash "$FOO_DIR/$1" "${@:2}"
@@ -23,4 +23,4 @@ _trigger_complete() {
     COMPREPLY=( $(_trigger_compgen_filenames "$cur") )
 }
 
-complete -o nospace -F _trigger_complete trigger
+complete -o nospace -F _trigger_complete run
