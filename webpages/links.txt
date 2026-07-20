@@ -5,3 +5,6 @@ https://namingschemes.com/Main_Page
 https://news.ycombinator.com/
 https://ourworldindata.org/
 https://lwn.net/s
+
+# Data
+https://fred.stlouisfed.org/
