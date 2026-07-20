@@ -31,4 +31,4 @@ At the beginning of each cycle the data and control information are partially pr
 
 
 
-# notes https://www.lighterra.com/papers/modernmicroprocessors/
+notes -> [https://www.lighterra.com/papers/modernmicroprocessors/](https://www.lighterra.com/papers/modernmicroprocessors/)
