@@ -8,3 +8,6 @@ https://lwn.net/s
 
 # Data
 https://fred.stlouisfed.org/
+
+#Investing
+https://www.bogleheads.org/wiki/Asset_allocation#Stocks_and_bonds
