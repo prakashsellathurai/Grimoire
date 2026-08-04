@@ -1,3 +1,7 @@
+For Dna sequencing Hardware check 
+
+[https://bradleywoolf.com/links-1/sequencing-my-own-dna-at-home](https://bradleywoolf.com/links-1/sequencing-my-own-dna-at-home)
+
 ## 1. High-Level System Architecture
 
 ```mermaid
