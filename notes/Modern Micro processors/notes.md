@@ -98,6 +98,17 @@ L1: mov d, b    ; b = d
 L2: ...
 ```
 
-If a pipelined processor executes the above instructions 
+If a pipelined processor executes the above instructions by the time conditional branch at line 2 reaches the execute stage the processor must have already fetched and decoded the next couple of instructions. It won't know until coditional branch gets to execute stage. TO avoid that processor takes a guess and speculativelevly excutes the instruction sbut they don't writeback the instructions and will be cancelled which is a waster of compute.
+
+two ways to over come, static branch prediction -> compiler marks the branch to tell the processor which way to go. which need the processor to be smart to make right guess which is not easy for other branches than For loops
+
+other alternative guess at runtime i.e dynamic branch prediction . it uses on -chip branch prediction tables containing the addresses of recent nranches and a bit indication whether a branch was taken or not last time. In reality two bits (for loop  back edges).
+even with best branch prediction techniques are sometimes wrong which results instrcutions being cancelled called as mispredict penality. pentium with 12 stage pipeline with mispredict penality of 10 - 15 cycles. very deep pipelines naturally suffer from diminishing returns, because the deeper the pipeline, the further into the future you must try to predict, the more likely you'll be wrong, and the greater the mispredict penalty when you are.
+
+## Eliminating Branches with Predication
+A new instruction calle cmovle  for "conditional move if less than or equal".This instruction works by executing as normal, but only commits itself if its condition is true (in the condition flags set by the most recent compare instruction). This is called a predicated instruction, because its execution is controlled by a predicate (a true/false test).
+
+
+## Instruction Scheduling, Register Renaming & OOO
 
 notes -> [https://www.lighterra.com/papers/modernmicroprocessors/](https://www.lighterra.com/papers/modernmicroprocessors/)
