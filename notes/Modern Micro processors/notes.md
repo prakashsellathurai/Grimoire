@@ -110,5 +110,29 @@ A new instruction calle cmovle  for "conditional move if less than or equal".Thi
 
 
 ## Instruction Scheduling, Register Renaming & OOO
+Now Branches and long latency instructions are causing bubbles in the pipeline then empty cycles can be used to do other work. To Achieve this instructions in the program must be reordered so that while one instruction us waiting other instructios can execute
+
+- approach 1 - reordering in hardware at runtime Doing Dynamic instruction scheduling(reordering) in the processor meand dispatch logic must be enhanced to look at group of instructions and dispatch them out of order called as out of order execution (ooo or oooE) In this dependencies between the instructions must be considered. processor keep the mapping of instructions in flight at anu moment and the physical registers they use called register renaming.
+- approach 2 - compiler rearrange the code during compile time
+ called static compile time instruction scheduling.
+
+## The brainiac vs speed-demon debate
+
+The out of order logic is costly while compiler can do the task of instruction scheduling well  enough without it.
+
+The Brainiac designs are smart machines with lot of OOO hardware trying to squeeze instruction level parallelism out of code even if it costly. in constrast speed demon designs are simpler and smaller relying on compiler and willing to sacrifice a little bit of instruction level parallelism for the benefit that simplicity brings. historically speed demon tended to run at high clock speeds but today that's no longer the case because clock speed is limited mainly by power and thermal issues.
+
+The clever engineering has reduced the power overhead of OOO execution considerably by late 1990s. unfortunately the effectiveness of OO execution in dynamically extracting additional instrcution level parallelism has been disappointing with only a relative small improvements seem
+
+
+## The Power Wall & The ILP Wall
+power increases linearly with clock frequency, it increases as the square of voltage, making for a kind of "triple whammy" at very high clock speeds (f*V*V).
+Due to enormous increase in power and cooliong required for even smallest increased performance it is not possible to push clcok speed even fruther this is called power wall
+
+normal programs just don't have a lot of fine-grained parallelism in them, due to a combination of load latencies, cache misses, branches and dependencies between instructions. This limit of available instruction-level parallelism is called the ILP wall.
+
+# x86
+with x86 Intel and AMd was able to remain competitive for 45 years
+
 
 notes -> [https://www.lighterra.com/papers/modernmicroprocessors/](https://www.lighterra.com/papers/modernmicroprocessors/)
