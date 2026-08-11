@@ -132,7 +132,45 @@ Due to enormous increase in power and cooliong required for even smallest increa
 normal programs just don't have a lot of fine-grained parallelism in them, due to a combination of load latencies, cache misses, branches and dependencies between instructions. This limit of available instruction-level parallelism is called the ILP wall.
 
 # x86
-with x86 Intel and AMd was able to remain competitive for 45 years
+with x86 Intel and AMd was able to remain competitive for 45 years  while Pentium superscalar x86 is state of the art it has complex and messy x86 instruction set complex addressing modes and minimal number of registers meant few instructions could be executed in parrallel due to potential dependencies. 
+
+To compete with RISC in x86 instructions was dynamically decoded into simple RISC like micro instructions which can be executed by a fast RISC style register renaming OOO superscalar core. These Micro instructions are called μops (pronounced "micro-ops").most x86 instructions decode into 1,2,or 3 μops while complex instructions require a larger number
+
+For these decoupled superscalar x86 processor register renaming is absolutely critical due to meager 8 registers of x86 arch in 32 bit mode (8=64 adds additional 8 register but still it's not a  lot) for providing more registers via renaming has mdoest effect exceptions of  advanced static instruction scheduling  not possible and use  a large register set to avoid memory accesses. 
+
+Due to depcoupled  x86 instruction fetch and decode from internal RISC-like μop instruction dispatch and execution also makes defining the width of a modern x86 processor a bit tricky.because internally such processors often group or fuse miops into common pairs (load-and-add or compare-and-branch)for ease of tracking. One of the most interesting members of the RISC-style x86 group was the Transmeta Crusoe processor, which translated x86 instructions into an internal VLIW form, rather than internal superscalar, and used software to do the translation at runtime, much like a Java virtual machine or modern JavaScript JIT runtime.it i.e software translation did reduce system's performance compared to hardware translation. which resulte din lean chip and uses less power which is ideal for laptops 
+
+
+## Threads -  SMT
+Even with optimisation superscaled deep line average IPC is 2-3 instructions per cycle
+Simultaneous multi-threading is a processor design technique which runs  independent instrcutons in thread level parallelism  like filling empty bubbles in the pipeline with useful instructions.From hardware pov only duplication in execution state like program counter, visble registers and memory mappings and so on little additional complexity for better squeeze in performance. It's suitable for application with highly cartiable code mixtures and threads don't constantly compete for same hardware resources.With all of those transistors available, it might also make sense to integrate other secondary functionality into the main CPU chip, such as I/O and networking (usually part of the motherboard chipset), dedicated video encoding/decoding hardware (usually part of the graphics system), or even an entire low-end GPU (graphics processing unit). This integration is particularly attractive in cases where a reduction in chip count, physical space or cost is more important than the performance advantage of more cores on the main CPU chip and separate, dedicated chips for those other purposes, making it ideal for phones, tablets and small, ultralight laptops. Such a heterogeneous design is called a system-on-chip, or SoC...
+
+## Data Parallelism – SIMD Vector Instructions
+In addition to Instruction level parallelism and thread level parallelism there is another one called Data parallelism the idea where on instruction apply to group of data values in parallel this is sometimes called SIMD parallelism (Single instruction multiple Data) also called vector processing ideal for scientific compution like super computers, imageing video memory wall isstill unsolved problem
+
+## Caches & The Memory Hierarchy
+modern processors solve memory wall via caching. A cache is a small but fast type of memory locates near the processor chip.it keeps copy of small pieces of main memory. typically there are small but fast primary L-1 cache on processor chip itself with larger L2 cache further but still on chip and possible even larger L3 cache . The combination of offchip external cahce (E -cache ) and main memory (RAM) forms memory hierarchy. also virtual memory(paging/swapping) provides illusion of infinte amount of main memory by moiving pages of RAM to and from storage.
+
+
+Level	Size |	Latency | 	Physical | Location |
+|----------|----------|----------| ------|
+L1 cache	 |32 KB	|4 cycles |	inside each core |
+L2 cache |	1 MB	|14 cycles	|beside each core|
+L3 cache	|32 MB	|~49 cycles	|shared between all cores|
+RAM	|4+ GB	|140+ cycles |	SDRAM DIMMs on motherboard|
+Swap	| 100+ GB	|10,000+ | cycles	hard disk or SSD|
+
+ modern primary caches achieve hit rates of around 90% for most software. So 90% of the time, accessing memory only takes a few cycles!
+
+ Caches can achieve these seemingly amazing hit rates because of the way programs work. Most programs exhibit locality in both time and space, when a program accesses a piece of memory, there's a good chance it will need to re-access the same piece of memory in the near future (temporal locality), and there's also a good chance it will need to access other nearby memory in the future as well (spatial locality). Temporal locality is exploited by merely keeping recently accessed data in the cache. To take advantage of spatial locality, data is transferred from main memory up into the cache in blocks of a few dozen bytes at a time, called a cache line.
+
+from hardware POV a cache works like a two column table one column memory address and other is the block of data values (eache line is whole block of data not single value). in reality the cache needs only store the necessary high end part of the address since lookupworks by using lowend part of the address to index the cache. when highest part called tag matches the tag stores in the tabel it's a hit and appropriate data is sent to core.common trick is to use virtual address for cache indexing but physical address for tags virtual to physical mapping can be performed in parrallel with cahce indexing.
+
+## Cache Conflicts & Associativity
+Ideally, a cache should keep the data that is most likely to be needed in the future. Since caches aren't psychic, a good approximation of this is to keep the most recently used data.
+cache conflict is when cache allow data from any praticular address in memory to occupy one location. it can cause pathological worst case performamce.The nymber of places a piece of data can be stored in a cache is called associativity. means cache lookup works by association.each piece of data is simply mapped to address % size within the cache (direct mapped cache). A cache which allows data to occupy one of 2 locations based on its address is called 2-way set-associative. Similarly, a 4-way set-associative cache allows for 4 possible locations for any given piece of data, and an 8-way cache 8 possible locations. Set-associative caches work much like direct-mapped ones, except there are several tables, all indexed in parallel, and the tags from each table are compared to see whether there is a match for any one of them...Usually, set-associative caches are able to avoid the problems that occasionally occur with direct-mapped caches due to unfortunate cache conflicts.
+
+The concept of caches also extends up into software systems. For example, the operating system uses main memory to cache the contents of the filesystem to speed up file I/O, and web browsers cache recently viewed pages, images and JavaScript files in case you revisit those sites. With respect to main memory and virtual memory (paging/swapping), it can be thought of as being a smart, fully associative cache, like the ideal cache mentioned \). After all, virtual memory is managed by the (hopefully) intelligent software of the OS kernel.
 
 
 notes -> [https://www.lighterra.com/papers/modernmicroprocessors/](https://www.lighterra.com/papers/modernmicroprocessors/)
