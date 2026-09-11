@@ -13,39 +13,24 @@ else
 fi
 
 TOOLS_DIR="$GRIMOIRE_DIR/tools/dotfiles"
-AUTO_COMPLETE_CONTENT=$(cat <<'EOF'
-# grimoire auto-complete
-GRIMOIRE_DIR="$HOME/grimoire"
-FOO_DIR="$GRIMOIRE_DIR/tools/dotfiles"
 
-_trigger_compgen_filenames() {
-    local cur="$1"
-    grep -v -F -f <(compgen -d -P ^ -S '$' -- $FOO_DIR"$cur") \
-        <(compgen -f -P ^ -S '$' -- $FOO_DIR"$cur") |
-        sed -e 's|^\^'$FOO_DIR'||' -e 's/\$$/ /'
-    compgen -d -S / -- $FOO_DIR"$cur" | sed -e 's|'$FOO_DIR'||'
-}
-run() {
-    echo "Running: $@"
-    bash "$FOO_DIR/$1" "${@:2}"
-}
-_trigger_complete() {
-    local cur=${COMP_WORDS[COMP_CWORD]}
-    COMPREPLY=( $(_trigger_compgen_filenames "$cur") )
-}
-complete -o nospace -F _trigger_complete run
+# Make scripts executable
+chmod +x "$TOOLS_DIR"/*.sh 2>/dev/null || true
+
+PATH_CONTENT=$(cat <<EOF
+# Grimoire scripts - add to PATH
+export PATH="\$PATH:$TOOLS_DIR"
 EOF
 )
 
-if grep -q "grimoire auto-complete" "$SHELL_INIT" 2>/dev/null; then
-    echo "auto-complete already sourced in $SHELL_INIT"
+if grep -q "Grimoire scripts" "$SHELL_INIT" 2>/dev/null; then
+    echo "grimoire PATH already configured in $SHELL_INIT"
 else
     echo "" >> "$SHELL_INIT"
-    echo "$AUTO_COMPLETE_CONTENT" >> "$SHELL_INIT"
-    echo "Added grimoire auto-complete to $SHELL_INIT"
+    echo "$PATH_CONTENT" >> "$SHELL_INIT"
+    echo "Added grimoire to PATH in $SHELL_INIT"
 fi
 
 echo ""
 echo "Setup complete! Run 'source $SHELL_INIT' or open a new shell."
-echo "Then use 'run <script_name>' to execute scripts in $TOOLS_DIR"
-EOF
+echo "You can now call scripts directly: kill-port.sh 8080, add_journal_entry.sh 'my entry', etc."
