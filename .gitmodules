@@ -1,2 +1,4 @@
 [submodule "grimoire"]
 	branch = main
+[submodule "data/non-public/submodules/Grimoire"]
+	branch = main
